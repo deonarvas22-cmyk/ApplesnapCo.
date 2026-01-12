@@ -1,0 +1,98 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AppleSnap Co Store</title>
+<style>
+body{margin:0;font-family:Arial;background:#0f0f0f;color:#fff}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#000;position:sticky;top:0}
+header img{height:40px}
+.cart-btn{background:#ff4d4d;padding:8px 14px;border-radius:20px;cursor:pointer}
+.hero{text-align:center;padding:70px 20px;background:linear-gradient(135deg,#ff4d4d,#ffb347);color:#000}
+section{padding:40px 20px;max-width:1100px;margin:auto}
+.products{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:768px){.products{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.products{grid-template-columns:repeat(4,1fr)}}
+.card{background:#1c1c1c;padding:15px;border-radius:14px;position:relative}
+.card img{width:100%;border-radius:12px}
+.badge{position:absolute;top:10px;left:10px;background:#ff4d4d;padding:4px 8px;border-radius:10px;font-size:.7rem}
+.qty{display:flex;gap:10px;align-items:center;margin:10px 0}
+.qty button{padding:5px 10px}
+.btn{background:#ffb347;color:#000;padding:8px 14px;border-radius:18px;cursor:pointer;text-align:center;margin-top:8px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);justify-content:center;align-items:center}
+.modal-box{background:#1c1c1c;padding:20px;border-radius:14px;width:90%;max-width:400px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:6px;border-bottom:1px solid #333}
+footer{text-align:center;padding:20px;background:#000;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<img src="applesnap-logo.png">
+<div class="cart-btn" onclick="openCart()">🛒 Cart (<span id="cartCount">0</span>)</div>
+</header><section class="hero">
+<h1>AppleSnap Co</h1>
+<p>Crunchy Apple Chips – Order via Messenger or Instagram</p>
+</section><section>
+<h2>Products</h2>
+<div class="products"><div class="card">
+<span class="badge">Best Seller</span>
+<img src="classic-apple-chips.png">
+<h3>Classic Apple Chips</h3>
+<p>₱99</p>
+<div class="qty"><button onclick="changeQty(this,-1)">−</button><span>1</span><button onclick="changeQty(this,1)">+</button></div>
+<div class="btn" onclick="addItem(this,'Classic Apple Chips',99)">Add to Cart</div>
+</div><div class="card">
+<img src="cinnamon-apple-chips.png">
+<h3>Cinnamon Apple Chips</h3>
+<p>₱109</p>
+<div class="qty"><button onclick="changeQty(this,-1)">−</button><span>1</span><button onclick="changeQty(this,1)">+</button></div>
+<div class="btn" onclick="addItem(this,'Cinnamon Apple Chips',109)">Add to Cart</div>
+</div><div class="card">
+<img src="honey-apple-chips.png">
+<h3>Honey‑Glazed Apple Chips</h3>
+<p>₱119</p>
+<div class="qty"><button onclick="changeQty(this,-1)">−</button><span>1</span><button onclick="changeQty(this,1)">+</button></div>
+<div class="btn" onclick="addItem(this,'Honey‑Glazed Apple Chips',119)">Add to Cart</div>
+</div><div class="card">
+<img src="spicy-apple-chips.png">
+<h3>Spicy Apple Chips</h3>
+<p>₱119</p>
+<div class="qty"><button onclick="changeQty(this,-1)">−</button><span>1</span><button onclick="changeQty(this,1)">+</button></div>
+<div class="btn" onclick="addItem(this,'Spicy Apple Chips',119)">Add to Cart</div>
+</div></div>
+</section><div class="modal" id="cartModal">
+<div class="modal-box">
+<h3>Your Order</h3>
+<table id="cartTable"></table>
+<p><b>Total: ₱<span id="total">0</span></b></p>
+<div class="btn" onclick="showGCash()">Pay with GCash</div>
+<div class="btn" onclick="checkoutMessenger()">Facebook Messenger</div>
+<div class="btn" onclick="checkoutIG()">Instagram DM</div>
+<div class="btn" onclick="closeCart()">Close</div>
+</div>
+</div><div class="modal" id="gcashModal">
+<div class="modal-box">
+<h3>Scan GCash QR</h3>
+<img src="gcash-qr.png" style="width:100%">
+<p>Send payment then message us</p>
+<div class="btn" onclick="confirmOrder()">I Paid</div>
+</div>
+</div><footer>
+<p>© 2026 AppleSnap Co</p>
+</footer><script>
+let cart=[];
+function changeQty(btn,val){let span=btn.parentElement.querySelector('span');let q=Math.max(1,parseInt(span.textContent)+val);span.textContent=q}
+function addItem(el,name,price){let q=parseInt(el.parentElement.querySelector('span').textContent);cart.push({name,price,qty:q});updateCart()}
+function updateCart(){document.getElementById('cartCount').textContent=cart.length}
+function openCart(){render();document.getElementById('cartModal').style.display='flex'}
+function closeCart(){document.getElementById('cartModal').style.display='none'}
+function render(){let t=document.getElementById('cartTable');let total=0;t.innerHTML='';cart.forEach(i=>{let s=i.price*i.qty;total+=s;t.innerHTML+=`<tr><td>${i.name} x${i.qty}</td><td>₱${s}</td></tr>`});document.getElementById('total').textContent=total}
+function showGCash(){document.getElementById('gcashModal').style.display='flex'}
+function confirmOrder(){alert('Order confirmed! Please send receipt via Messenger or IG.');cart=[];updateCart();closeCart();document.getElementById('gcashModal').style.display='none'}
+function checkoutMessenger(){window.open('https://m.me/yourfacebookpage','_blank')}
+function checkoutIG(){window.open('https://ig.me/m/yourinstagram','_blank')}
+</script></body>
+</html><style>header img {
+  height: 60px;
+}</style>
